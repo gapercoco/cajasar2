@@ -1,10 +1,10 @@
 <?php
 //Archivo de configuracion.
-//Para Dattatec
+//Para DT
 define(DB_HOST, 'localhost');
-define(DB_USER,'ao000032_lgi');
-define(DB_PASSWORD,'qqW6TmvT');
-define(DB_NAME,'ao000032_radatilly');
+define(DB_USER,'');
+define(DB_PASSWORD,'');
+define(DB_NAME,'');
 //Para el Urquiza
 define(DB_HOST, 'localhost');
 define(DB_USER,'dbu_t31m07');

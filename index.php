@@ -39,7 +39,7 @@ $site = new sitio();
         <div class="navbar-wrapper">
             <div class="container">
                 <a href="?" ><img src="img/logo2-crop.png" height="80" alt="CajasAR" /></a>
-                <button id="btnAdmin" class="btn btn-primary pull-right" style="margin-top:20px; margin-right:20px;"><span class="glyphicon glyphicon-user" ></span> Admin</button>
+                <button id="btnAdmin" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modal-login" style="margin-top:20px; margin-right:20px;"><span class="glyphicon glyphicon-user" ></span> Admin</button>
                 <div class="navbar navbar-default" role="navigation">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -119,6 +119,38 @@ $site = new sitio();
             </p>
         </footer>
     </div>
+    <div class="modal fade" id="modal-login" tabindex="-1" role="dialog" aria-labelledby="modal-interesado-label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="modal-interesado-label" >Ingreso administración</h4>
+                        <small>Ingreso a la secci&oacute;n del backend..</small>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" class="">
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-addon glyphicon glyphicon-user"></span>
+                                <input type="text" class="form-control" placeholder="Usuario" name="usuario" id="input_usuario" />
+                            </div>
+                            <br>
+                            <div class="input-group input-group-lg">
+                                <span class="glyphicon glyphicon-lock input-group-addon"></span>
+                                <input type="password" class="form-control" placeholder="Clave" name="clave" id="input_clave" />
+                            </div>
+                            <hr>
+                            <div name="msgLogin" id="msgLogin" class="alert hidden"></div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary btnEstoyInteresado" id="btnLogin">Ingresar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <script src="js/bootstrap.min.js"></script>

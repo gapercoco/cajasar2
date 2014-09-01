@@ -109,7 +109,7 @@ $prop = $site->getPropiedad($_GET['propid']);
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Enviar</button>
+                <button type="button" class="btn btn-primary btnEstoyInteresado" id="btnEstoyInteresado">Enviar</button>
             </div>
         </div>
     </div>
