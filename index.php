@@ -39,7 +39,7 @@ $site = new sitio();
         <div class="navbar-wrapper">
             <div class="container">
                 <a href="?" ><img src="img/logo2-crop.png" height="80" alt="CajasAR" /></a>
-                <button id="btnAdmin" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modal-login" style="margin-top:20px; margin-right:20px;"><span class="glyphicon glyphicon-user" ></span> Admin</button>
+                <a href="admin/"><button id="btnAdmin" class="btn btn-primary pull-right" style="margin-top:20px; margin-right:20px;"><span class="glyphicon glyphicon-user" ></span> Admin</button></a>
                 <div class="navbar navbar-default" role="navigation">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -131,12 +131,12 @@ $site = new sitio();
                         <form role="form" class="">
                             <div class="input-group input-group-lg">
                                 <span class="input-group-addon glyphicon glyphicon-user"></span>
-                                <input type="text" class="form-control" placeholder="Usuario" name="usuario" id="input_usuario" />
+                                <input type="text" class="form-control" placeholder="Usuario" name="txtUser" id="txtUser" />
                             </div>
                             <br>
                             <div class="input-group input-group-lg">
                                 <span class="glyphicon glyphicon-lock input-group-addon"></span>
-                                <input type="password" class="form-control" placeholder="Clave" name="clave" id="input_clave" />
+                                <input type="txtPassword" class="form-control" placeholder="Clave" name="clave" id="txtPasswd" />
                             </div>
                             <hr>
                             <div name="msgLogin" id="msgLogin" class="alert hidden"></div>
@@ -153,9 +153,12 @@ $site = new sitio();
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/assets/docs.min.js"></script>
     <script src="js/assets/holder.js"></script>
+    <script src="js/funciones.js"></script>
+    
     <script>
         !function ($) {
             $(function(){

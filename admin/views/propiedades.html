@@ -1,0 +1,346 @@
+<h1 class="page-header">Propiedades</h1>
+
+<div ng-controller="propiedadesController">
+    <button class="btn btn-primary" data-toggle="modal" data-target="#modalNuevaPropiedad">Nueva</button>
+    <div class="clearfix"></div>
+    <div class="col-md-5 pull-right">
+        <form class="form-inline pull-right">
+            <div class="form-group">
+                <input type="text" placeholder="filtrar..." ng-model="query" class="form-control input-sm">
+                <select ng-model="sortOrder" ng-init="sortOrder='!date'" title="Ordenar por" class="form-control input-sm">
+                    <option value="!ID">Codigo</option>
+                    <option value="!prop_format">Tipo</option>
+                    <option value="!prop_dormitorios">Dormitorios</option>
+                    <option value="!prop_sup_total">Sup. Total</option>
+                    <option value="!prop_sup_cubierta">Sup. Cubierta</option>
+                </select>
+                <select ng-model="itemsPerPage" ng-init="itemsPerPage=10" title="Cantidad por pagina" class="form-control input-sm">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="40">40</option>
+                    <option value="80">80</option>
+                </select>          
+            </div>
+        </form>
+    </div>
+
+    <table class="table table-striped table-hover">
+        <thead>
+            <th>#</th>
+            <th>Tipo</th>
+            <th>Formato</th>
+            <th>Titulo</th>
+            <th>Resumen</th>
+            <th>Fecha carga</th>
+            <th>Ubicaci&oacute;n</th>
+            <th>Sup. total</th>
+            <th>Sup. cubierta</th>
+            <th>Dormitorios</th>
+            <th>Ba&ntilde;os</th>
+            <th></th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="prop in propiedades|filter:query|orderBy:sortOrder|limitTo:itemsPerPage">
+                <td><a href="" data-toggle="modal" data-target="#modalNuevaPropiedad" ng-click="editarPropiedad(prop.ID)">{{prop.ID}}</a></td>
+                <td>{{prop.type_desc}}</td>
+                <td>{{prop.format}}</td>
+                <td>{{prop.prop_title}}</td>
+                <td>{{prop.prop_resume}}</td>
+                <td>{{prop.prop_created|date}}</td>
+                <td>{{prop.prop_ubicacion}}</td>
+                <td>{{prop.prop_sup_total}}</td>
+                <td>{{prop.prop_sup_cubierta}}</td>
+                <td>{{prop.prop_dormitorios}}</td>
+                <td>{{prop.prop_banios}}</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="modalNuevaPropiedad">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Cargar nueva propiedad</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="row">
+                            <div class="row">
+                               <div class="col-md-4 form-group">
+                                   <label for="">Código:</label>
+                                   <input type="text" class="form-control" id="" placeholder="" ng-model="propiedad.ID">   
+                               </div>
+                                <div class="">
+                                    <div class="col-md-4 form-group">
+                                        <label for="tipo">Tipo:</label>
+                                        <select class="form-control" ng-model="propiedad.prop_type" ng-select="this.value=propiedad.prop_type">
+                                            <option value="1">Venta</option>
+                                            <option value="2">Alquiler</option>
+                                            <option value="3">Plano</option>
+                                            <option value="4">Maqueta</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label for="">Formato:</label>
+                                    <select class="form-control" ng-model="propiedad.prop_format">
+                                        <option value="1">Departamento</option>
+                                        <option value="2">Casa</option>
+                                        <option value="3">Pozo</option>
+                                        <option value="4">Proyecto</option>
+                                        <option value="5">Piso</option>
+                                        <option value="6">Cochera</option>
+                                        <option value="7">Local</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <label for="">Titulo</label>
+                                    <input type="text" class="form-control" id="" placeholder="" ng-model="propiedad.prop_title">
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label for="">Resumen</label>
+                                    <input type="text" class="form-control" id="" placeholder="" ng-model="propiedad.prop_resume">
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label for="">Ubicación</label>
+                                    <input type="text" class="form-control" id="" placeholder="" ng-model="propiedad.prop_ubicacion">
+                                </div>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <label for="">Descripci&oacute;n</label>
+                                <textarea class="form-control" ng-model="propiedad.prop_descrip"></textarea>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="checkbox">
+                                    <label> Publicada
+                                        <input type="checkbox"> 
+                                    </label>
+                                </div>    
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <label>Fotos:</label>
+                                <div id="uploaderFotos"></div>
+                                <div id="log"></div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    
+    /*
+    tinymce.init({
+        selector: "textarea",
+        height: 300,
+        plugins: [
+            "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+            "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+            "save table contextmenu directionality emoticons template paste textcolor"
+        ],
+        language : 'es',
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons" 
+        
+    });
+    */
+</script>
+<script type="text/javascript">
+    // Convert divs to queue widgets when the DOM is ready
+    $(function() {
+
+        $("#uploaderFotos").pluploadQueue({
+            // General settings
+            runtimes : 'html5,flash,silverlight,html4',
+            url : '/examples/upload',
+            chunk_size : '1mb',
+            unique_names : true,
+            lang: 'es',
+            // Resize images on client-side if we can
+            resize : {width : 320, height : 240, quality : 90},
+
+            filters : {
+                max_file_size : '10mb',
+
+                // Specify what files to browse for
+                mime_types: [
+                    {title : "Image files", extensions : "jpg,gif,png"},
+                    {title : "Zip files", extensions : "zip"}
+                ]
+            },
+
+            // Flash settings
+            flash_swf_url : '/plupload/js/Moxie.swf',
+
+            // Silverlight settings
+            silverlight_xap_url : '/plupload/js/Moxie.xap',
+
+            // PreInit events, bound before any internal events
+            preinit : {
+                Init: function(up, info) {
+                    log('[Init]', 'Info:', info, 'Features:', up.features);
+                },
+
+                UploadFile: function(up, file) {
+                    log('[UploadFile]', file);
+
+                    // You can override settings before the file is uploaded
+                    // up.setOption('url', 'upload.php?id=' + file.id);
+                    // up.setOption('multipart_params', {param1 : 'value1', param2 : 'value2'});
+                }
+            },
+
+            // Post init events, bound after the internal events
+            init : {
+                PostInit: function() {
+                    // Called after initialization is finished and internal event handlers bound
+                    log('[PostInit]');
+
+                    document.getElementById('uploadfiles').onclick = function() {
+                        uploader.start();
+                        return false;
+                    };
+                },
+
+                Browse: function(up) {
+                    // Called when file picker is clicked
+                    log('[Browse]');
+                },
+
+                Refresh: function(up) {
+                    // Called when the position or dimensions of the picker change
+                    log('[Refresh]');
+                },
+
+                StateChanged: function(up) {
+                    // Called when the state of the queue is changed
+                    log('[StateChanged]', up.state == plupload.STARTED ? "STARTED" : "STOPPED");
+                },
+
+                QueueChanged: function(up) {
+                    // Called when queue is changed by adding or removing files
+                    log('[QueueChanged]');
+                },
+
+                OptionChanged: function(up, name, value, oldValue) {
+                    // Called when one of the configuration options is changed
+                    log('[OptionChanged]', 'Option Name: ', name, 'Value: ', value, 'Old Value: ', oldValue);
+                },
+
+                BeforeUpload: function(up, file) {
+                    // Called right before the upload for a given file starts, can be used to cancel it if required
+                    log('[BeforeUpload]', 'File: ', file);
+                },
+
+                UploadProgress: function(up, file) {
+                    // Called while file is being uploaded
+                    log('[UploadProgress]', 'File:', file, "Total:", up.total);
+                },
+
+                FileFiltered: function(up, file) {
+                    // Called when file successfully files all the filters
+                    log('[FileFiltered]', 'File:', file);
+                },
+
+                FilesAdded: function(up, files) {
+                    // Called when files are added to queue
+                    log('[FilesAdded]');
+
+                    plupload.each(files, function(file) {
+                        log('  File:', file);
+                    });
+                },
+
+                FilesRemoved: function(up, files) {
+                    // Called when files are removed from queue
+                    log('[FilesRemoved]');
+
+                    plupload.each(files, function(file) {
+                        log('  File:', file);
+                    });
+                },
+
+                FileUploaded: function(up, file, info) {
+                    // Called when file has finished uploading
+                    log('[FileUploaded] File:', file, "Info:", info);
+                },
+
+                ChunkUploaded: function(up, file, info) {
+                    // Called when file chunk has finished uploading
+                    log('[ChunkUploaded] File:', file, "Info:", info);
+                },
+
+                UploadComplete: function(up, files) {
+                    // Called when all files are either uploaded or failed
+                    log('[UploadComplete]');
+                },
+
+                Destroy: function(up) {
+                    // Called when uploader is destroyed
+                    log('[Destroy] ');
+                },
+
+                Error: function(up, args) {
+                    // Called when error occurs
+                    log('[Error] ', args);
+                }
+            }
+        });
+
+
+        function log() {
+            var str = "";
+
+            plupload.each(arguments, function(arg) {
+                var row = "";
+
+                if (typeof(arg) != "string") {
+                    plupload.each(arg, function(value, key) {
+                        // Convert items in File objects to human readable form
+                        if (arg instanceof plupload.File) {
+                            // Convert status to human readable
+                            switch (value) {
+                                case plupload.QUEUED:
+                                    value = 'QUEUED';
+                                    break;
+
+                                case plupload.UPLOADING:
+                                    value = 'UPLOADING';
+                                    break;
+
+                                case plupload.FAILED:
+                                    value = 'FAILED';
+                                    break;
+
+                                case plupload.DONE:
+                                    value = 'DONE';
+                                    break;
+                            }
+                        }
+
+                        if (typeof(value) != "function") {
+                            row += (row ? ', ' : '') + key + '=' + value;
+                        }
+                    });
+
+                    str += row + " ";
+                } else {
+                    str += arg + " ";
+                }
+            });
+
+            var log = $('#log');
+            log.append(str + "\n");
+            log.scrollTop(log[0].scrollHeight);
+        }
+    });
+</script>

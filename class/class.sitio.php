@@ -60,40 +60,7 @@
         public function getDisabled() {
             return $this->disabled;
         }
-		/****** AUTH *********/
-		public function randomString($length = 50)
-		{
-			$characters = '0123456789abcdefghijklmnopqrstuvwxyz';
-		    $string = '';   
-			         
-			for ($p = 0; $p < $length; $p++) {
-				$string .= $characters[mt_rand(0, strlen($characters))];
-			}
-	        return $string;
-		}
 		
-		public function hashData($data)
-		{
-			return hash_hmac('sha512', $data, $this->siteKey);
-		}
-		
-		
-		public function checkSesion()
-		{
-			$db = DataBase::getInstance();
-			$sql = 'SELECT * FROM sesiones WHERE  idSesion = "'.session_id().'" AND token = "'.$_COOKIE['colpsi'].'"';
-			$db->setQuery($sql);
-			$cs = $db->loadObjectList();
-			if($cs)
-			{
-				$_SESSION['token'] = $_COOKIE['colpsi'];
-				$this->logged = 1;
-			}
-			else
-				$this->logged = 0;
-				
-			return $this->logged;
-		}
 		
 		public function getNavbarItems($mid=0){
             $db = DataBase::getInstance();
@@ -132,7 +99,15 @@
             $slider = $db->loadObjectList();
             return $slider;
         }
-				
+        
+        public function setMessages($nombre,$email,$telefono,$mensaje,$propiedad=0){
+            $sql = 'INSERT INTO lgi_messages SET name = "'.$nombre.'",email = "'.$email.'", phone = "'.$telefono.'", message = "'.$mensaje.'", date = NOW()';
+            $db = DataBase::getInstance();
+            $db->setQuery($sql);
+            $db->execute();
+            $a = array('msg'=>'Salio OK', 'Error'=>mysql_error());
+            return $a;
+        }
 		function cambiarfecha_mysql($fecha)
 		{
 		  list($dia,$mes,$ano)=explode("/",$fecha);

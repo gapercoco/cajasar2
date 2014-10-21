@@ -1,7 +1,8 @@
 $(document).ready(function(){
     $('#btnEstoyInteresado').on('click',function(){
+        
         $.ajax({
-            url:".php",
+            url:"querys/estoyInteresado.php",
             type: "POST",
             dataType: "json",
             data:{
@@ -14,11 +15,13 @@ $(document).ready(function(){
         })
         .done(function( response ){
             if(response){
-                alert('Su mensaje fue enviado correctamente.');
+                alert('Su mensaje fue enviado correctamente. ' + response.msg);
+                $('#modal-interesado').modal('toggle');
+                $('#name').val('');
             }
         })
-        .fail(function(){
-            alert('Se produjo un error. Vuelva a intentarlo');
+        .fail(function(jqXHR,textStatus,errorThrown){
+            alert('Se produjo un error. Vuelva a intentarlo '+textStatus);
         });
         return false;    
     });

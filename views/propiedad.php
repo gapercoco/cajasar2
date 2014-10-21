@@ -95,7 +95,7 @@ $prop = $site->getPropiedad($_GET['propid']);
                     </div>
                     <div class="form-group">
                         <label for="email" class="sr-only">Email</label>
-                        <input type="mail" name="email" id="email" value="" class="form-control" placeholder="Email" ><br>
+                        <input type="email" name="email" id="email" value="" class="form-control" placeholder="Email" ><br>
                     </div>
                     <div class="form-group">
                         <label for="Telefono" class="sr-only">Telefono</label>
