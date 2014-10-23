@@ -61,6 +61,36 @@ cajasarAppControllers.controller('mensajesController',function($scope,$http){
     $http.get('querys/mensajes.php').success(function(data){
         $scope.mensajes = data;
     })
+    $scope.setMessagesAsRead = function(id){
+        $http.post('querys/mensajes.php',id)
+        .success(function(data){
+            for(var i=0;i<$scope.mensajes.length;i++)
+                if($scope.mensajes[i].ID == id)
+                    $scope.mensajes[i].date_call = data[0].date_call;
+            
+        })
+        .error(function(){
+            alert('Ocurrio un error, vuelva a intentarlo');
+        })
+    }
+    $scope.deleteMessage = function(id){
+        $http.delete('querys/mensajes.php/'+id)
+        .success(function(data){
+            if(data == "true"){
+                for(var i=0;i<$scope.mensajes.length;i++)
+                    if($scope.mensajes[i].ID == id){
+                        $scope.mensajes.splice(i,1);  
+                        break;
+                    }
+            }
+            else
+                alert('Ocurrio un error al eliminar el mensaje.');
+                
+        })
+        .error(function(){
+            alert('Ocurrio un error.');
+        })
+    }
 });
 cajasarAppControllers.controller('logoutController',function($scope,$window){
     $window.location.href = '#';
@@ -102,5 +132,24 @@ cajasarAppControllers.controller('propiedadesController',function($scope,$http){
                 console.log(angular.toJson($scope.propiedad));
                 break;
             }
+    }
+    $scope.deletePropiedad = function(id){
+        $http.delete('querys/propiedades.php/'+id)
+        .success(function(data){
+            if(data == "true"){
+                for(var i=0;i<$scope.propiedades.length;i++)
+                    if($scope.propiedades[i].ID == id){
+                        $scope.propiedades.splice(i,1);  
+                        console.log('Cerrar el modal');
+                        break;
+                    }
+            }
+            else
+                alert('Ocurrio un error al eliminar la propiedad.');
+
+        })
+        .error(function(){
+            alert('Ocurrio un error.');
+        })
     }
 });

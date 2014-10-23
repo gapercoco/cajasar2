@@ -42,7 +42,10 @@ $back = new Backend();
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">CajasAR</a>
+                    <a class="navbar-brand" href="#">
+                        <img src="../img/logo2-crop.png" height="25" alt="CajasAR" />
+                        CajasAR
+                    </a>
                     <p ng-if="navbar.sitio.usuario != null " class="navbar-text" >Sesi&oacute;n iniciada como: {{navbar.sitio.usuario}}</p>
                 </div>
                 <div class="navbar-collapse collapse">

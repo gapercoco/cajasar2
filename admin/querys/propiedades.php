@@ -2,6 +2,19 @@
 require_once('../load.php');
 $back = new Backend();
 if($back->isLogged()){
-    echo json_encode($back->getPropiedades());
+    switch($_SERVER['REQUEST_METHOD']){
+        case 'POST':
+            $id = file_get_contents("php://input");
+            //echo json_encode($back->setMessagesAsRead($id));
+            break;
+        case 'DELETE':
+            $a = str_split($_SERVER['REQUEST_URI']);
+            $id = array_pop($a);
+            echo json_encode($back->deletePropiedad($id));
+            break;
+        default:
+            echo json_encode($back->getPropiedades());
+
+    }
 }
 ?>

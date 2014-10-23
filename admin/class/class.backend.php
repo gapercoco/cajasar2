@@ -57,11 +57,39 @@ class Backend {
         $db->setQuery($sql);
         return $db->loadObjectList();
     }
+    
     public function getPropiedades(){
         $db = DataBase::getInstance();
         $sql = 'SELECT * FROM lgi_propiedades,lgi_format,lgi_tiposprop WHERE lgi_format.IDFormat = lgi_propiedades.prop_format AND lgi_tiposprop.IDType = lgi_propiedades.prop_type';
         $db->setQuery($sql);
         return $db->loadObjectList();
     }
+    public function deletePropiedad($id){
+        $db = DataBase::getInstance();
+        $sql = 'DELETE lgi_propiedades,lgi_fotosxprop FROM lgi_propiedades LEFT JOIN lgi_fotosxprop ON lgi_fotosxprop.ID = lgi_propiedades.ID WHERE lgi_propiedades.ID = '.$id;
+        $db->setQuery($sql);
+        return $db->execute();
+    }
+    public function setMessagesAsRead($id){
+        $db = DataBase::getInstance();
+        $sql = 'UPDATE lgi_messages SET lgi_messages.date_call = NOW() WHERE lgi_messages.ID = '.$id;
+        $db->setQuery($sql);
+        if($db->execute()){
+            $sql = 'SELECT date_call FROM lgi_messages WHERE lgi_messages.ID = '.$id;
+            $db->setQuery($sql);
+            return $db->loadObjectList();
+        }
+        else
+            return false;
+            
+        
+    }
+    public function deleteMessage($id){
+        $db = DataBase::getInstance();
+        $sql = 'DELETE FROM lgi_messages WHERE lgi_messages.ID = '.$id;
+        $db->setQuery($sql);
+        return $db->execute();
+    }
+    
 }
 ?>
