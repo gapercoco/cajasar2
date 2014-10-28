@@ -13,7 +13,13 @@ if($back->isLogged()){
             echo json_encode($back->deletePropiedad($id));
             break;
         default:
-            echo json_encode($back->getPropiedades());
+            $a = array(
+                'movimientos' => $back->getMovimientos(),
+                'cheques' => $back->getCheques(),
+                'clientes' => $back->getClientes(),
+                'bancos' => $back->getBancos()
+            );
+            echo json_encode($a);
 
     }
 }

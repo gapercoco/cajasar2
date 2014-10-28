@@ -5,5 +5,6 @@
         <input type="password" class="form-control" name="password" placeholder="Password" ng-model="credentials.password" required>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Ingresar</button>
     </form>
+    <p>Usuario: admin clave: 12345</p>
 </div>
 

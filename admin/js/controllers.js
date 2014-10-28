@@ -17,8 +17,8 @@ cajasarApp.config(['$routeProvider',
                        
                    }).
                    when ('/Caja',{
-                       templateUrl: 'views/logout.php',
-                       controller: 'logoutController',
+                       templateUrl: 'views/caja.html',
+                       controller: 'cajaController',
 
                    }).
                    when ('/Mensajes',{
@@ -151,5 +151,28 @@ cajasarAppControllers.controller('propiedadesController',function($scope,$http){
         .error(function(){
             alert('Ocurrio un error.');
         })
+    }
+});
+cajasarAppControllers.controller('cajaController',function($scope,$http){
+    console.log('Caja');
+    $scope.saldo = 0;
+    $http.get('querys/caja.php').success(function(data){
+        $scope.caja = data; 
+        for(var i=0;i<$scope.caja.movimientos.length;i++){
+            if($scope.caja.movimientos[i].tipo === 'ING')
+                $scope.saldo += $scope.caja.movimientos[i].total;
+            else
+                $scope.saldo -= $scope.caja.movimientos[i].total;
+        }
+    });
+    $scope.clientes = [
+        {codigo:1,nombre:"Nicolas"},
+        {codigo:3,nombre:"Guillermo"},
+        {codigo:2,nombre:"Guido"}
+    ];
+    
+    $scope.agregarCliente = function(){
+        var cliente ={codigo:10,nombre:"Pepe"};
+        $scope.clientes.push(cliente);
     }
 });

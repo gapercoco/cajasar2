@@ -1,0 +1,211 @@
+<h1 class="page-header">Caja</h1>
+<div ng-controller="cajaController">
+
+    <div class="row">
+        <button class="btn btn-success">Nuevo ingreso/egreso</button>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#modalClientes">Nuevo cliente / proveedor</button>
+        <button class="btn btn-primary">Nuevo banco</button>
+    </div>
+    <p></p>
+    <div class="col-md-7">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Movimientos<span class="pull-right">saldo:{{saldo|currency}}</span></h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped table-hover" ng-if="caja.movimientos.length > 0">
+                    <thead>
+                        <th>Fecha</th>
+                        <th>Comprobante</th>
+                        <th>Cliente/Provedor</th>
+                        <th>Tipo valor</th>
+                        <th>Neto</th>
+                        <th>I.V.A.</th>
+                        <th>Total</th>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="movimiento in caja.movimientos|orderBy:ID">
+                            <td>{{movimiento.fecha|date}}</td>
+                            <td>{{movimiento.tipo}}</td>
+                            <td>{{movimiento.cliente}}</td>
+                            <td></td>
+                            <td>{{movimiento.neto|currency}}</td>
+                            <td>{{movimiento.tipo_iva|number}}</td>
+                            <td>{{movimiento.total|currency}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3 class="page-header" ng-if="caja.movimientos.length <= 0">No hay movimientos de caja</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Cartera de cheques</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped table-hover" ng-if="caja.cheques.length > 0">
+                        <thead>
+                            <th>Banco</th>
+                            <th>Nro Cheque</th>
+                            <th>Fecha emisi&oacute;n</th>
+                            <th>Fecha pago</th>
+                            <th>Importe</th>
+                            <th>Tipo</th>
+                            <th></th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="cheque in caja.cheques|orderBy:fecha_emision">
+                                <td>{{cheque.banco}}</td>
+                                <td>{{cheque.numero}}</td>
+                                <td>{{cheque.fecha_emision}}</td>
+                                <td>{{cheque.fecha_pago}}</td>
+                                <td>{{cheque.importe}}</td>
+                                <td>{{cheque.tipo}}</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h3 class="page-header" ng-if="caja.cheques.length <= 0">No hay cheques en cartera</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Clientes</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped table-hover" ng-if="caja.clientes.length > 0">
+                        <thead>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Tel&eacute;fono</th>
+                            <th></th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="cliente in caja.clientes|filter:{cliente:1}">
+                                <td>{{cliente.ID}}</td>
+                                <td>{{cliente.nombre}}</td>
+                                <td>{{cliente.telefono}}</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h3 class="page-header" ng-if="caja.clientes.length <= 0">No hay clientes cargados</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Proveedores</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <th>#</th>
+                            <th>Raz&oacute;n social</th>
+                            <th>Tel&eacute;fono</th>
+                            <th></th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="proveedor in caja.clientes|filter:{cliente:0}">
+                                <td>{{proveedor.ID}}</td>
+                                <td>{{proveedor.nombre}}</td>
+                                <td>{{proveedor.telefono}}</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Bancos</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <th>Código</th>
+                            <th>Razón Social</th>
+                            <th></th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="banco in caja.bancos">
+                                <td><a href="#">{{banco.ID}}</a></td>
+                                <td>{{banco.descripcion}}</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>    
+    <!-- Arrancamos con los modales -->
+    <!-- Modal clientes -->
+    <div class="modal fade" id="modalClientes">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Clientes</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="row">
+                            <div class="row">
+                                <div class="col-md-5 form-group">
+                                    <label for="">Código:</label>
+                                    <input type="text" class="form-control" id="" placeholder="" ng-model="cliente.ID" disabled>   
+                                </div>
+                                <div class="">
+                                    <div class="col-md-5 form-group">
+                                        <label for="tipo">Tipo:</label>
+                                        <select class="form-control" ng-model="cliente.cliente">
+                                            <option value="1">Cliente</option>
+                                            <option value="0">Proveedor</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 form-group">
+                                    <label for="">Raz&oacute;n social</label>
+                                    <input type="text" class="form-control" id="" placeholder="" ng-model="cliente.nombre">
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label for="">Domicilio:</label>
+                                    <input type="text" class="form-control" id="" placeholder="" ng-model="cliente.domicilio">
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label for="">Tel&eacute;fono:</label>
+                                    <input type="text" class="form-control" id="" placeholder="" ng-model="cliente.telefono">
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label for="">email</label>
+                                    <input type="text" class="form-control" id="" placeholder="" ng-model="cliente.email">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" ng-click="deletePropiedad(propiedad.ID)" ng-if="propiedad.ID">Eliminar</button>
+                        <button type="button" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fin modal clientes -->
+    
+</div>

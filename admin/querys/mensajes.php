@@ -10,7 +10,8 @@ if($back->isLogged()){
             break;
         case 'DELETE':
             
-            $a = str_split($_SERVER['REQUEST_URI']);
+            $a = explode('/',$_SERVER['REQUEST_URI']);
+            //var_dump($a);
             $id = array_pop($a);
             echo json_encode($back->deleteMessage($id));
             break;

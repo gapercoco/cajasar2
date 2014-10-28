@@ -91,5 +91,30 @@ class Backend {
         return $db->execute();
     }
     
+    public function getMovimientos(){
+        $db = DataBase::getInstance();
+        $sql = 'SELECT * FROM lgi_movimientos';
+        $db->setQuery($sql);
+        return $db->loadObjectList();
+    }
+    public function getCheques(){
+        $db = DataBase::getInstance();
+        $sql = 'SELECT * FROM lgi_cheques';
+        $db->setQuery($sql);
+        return $db->loadObjectList();
+    }
+    public function getClientes(){
+        $db = DataBase::getInstance();
+        $sql = 'SELECT * FROM lgi_clientes';
+        $db->setQuery($sql);
+        return $db->loadObjectList();
+    }
+    public function getBancos(){
+        $db = DataBase::getInstance();
+        $sql = 'SELECT * FROM lgi_bancos';
+        $db->setQuery($sql);
+        return $db->loadObjectList();
+    }
+    
 }
 ?>
