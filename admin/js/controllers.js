@@ -154,25 +154,87 @@ cajasarAppControllers.controller('propiedadesController',function($scope,$http){
     }
 });
 cajasarAppControllers.controller('cajaController',function($scope,$http){
-    console.log('Caja');
-    $scope.saldo = 0;
+    $scope.saldoTotal = 0;
+    $scope.saldoEFE = 0;
+    $scope.saldoCHC = 0;
+    $scope.cliente = {};
+    
     $http.get('querys/caja.php').success(function(data){
         $scope.caja = data; 
         for(var i=0;i<$scope.caja.movimientos.length;i++){
-            if($scope.caja.movimientos[i].tipo === 'ING')
-                $scope.saldo += $scope.caja.movimientos[i].total;
-            else
-                $scope.saldo -= $scope.caja.movimientos[i].total;
+            if($scope.caja.movimientos[i].tipo === 'INGRESO'){
+                $scope.saldoTotal += parseFloat($scope.caja.movimientos[i].total);
+                if($scope.caja.movimientos[i].valor === 'EFE')
+                    $scope.saldoEFE += parseFloat($scope.caja.movimientos[i].total);
+                else
+                    $scope.saldoCHC += parseFloat($scope.caja.movimientos[i].total);
+            }
+            else{
+                $scope.saldoTotal -= parseFloat($scope.caja.movimientos[i].total);
+                if($scope.caja.movimientos[i].valor === 'EFE')
+                    $scope.saldoEFE -= parseFloat($scope.caja.movimientos[i].total);
+                else
+                    $scope.saldoCHC -= parseFloat($scope.caja.movimientos[i].total);
+            }
         }
     });
-    $scope.clientes = [
-        {codigo:1,nombre:"Nicolas"},
-        {codigo:3,nombre:"Guillermo"},
-        {codigo:2,nombre:"Guido"}
-    ];
     
-    $scope.agregarCliente = function(){
-        var cliente ={codigo:10,nombre:"Pepe"};
-        $scope.clientes.push(cliente);
+    
+    $scope.guardarCliente = function(){
+        $('#btnGuardarCliente').removeClass('btn-success').disabled = true;
+        
+        if(angular.isString($scope.cliente.nombre) && angular.isString($scope.cliente.cliente)){
+            $http.post('querys/clientes.php',$scope.cliente).success(function(data){
+                
+                if(data != 'false'){
+                    if(data === '0'){
+                        for(var i=0;i<$scope.caja.clientes.length;i++){
+                            if($scope.caja.clientes[i].ID === $scope.cliente.ID)
+                                $scope.caja.clientes[i] = $scope.cliente;
+                        }
+                    }
+                    else{
+                        $scope.cliente.ID = data;
+                        $scope.caja.clientes.push($scope.cliente);    
+                    }
+                    $('#btnGuardarCliente').addClass('btn-success').disabled = false;
+                }
+                else{
+                    
+                    $('#btnGuardarCliente').addClass('btn-danger'),disabled = false;
+                    console.log("Error al postear cliente: "+data);
+                }
+            })
+        }
+        else
+            alert('Debe ingresar al menos la raz&oacute;n social e indicar si es cliente o proveedor');
+
+    }
+    $scope.editarCliente = function(id){
+        for(var i=0; i<$scope.caja.clientes.length;i++){
+            if($scope.caja.clientes[i].ID === id){
+                $scope.cliente = $scope.caja.clientes[i];
+                break;
+            }
+        }
+        $('#modalClientes').modal('show');
+    }
+    $scope.deleteCliente = function(id){
+        $http.delete('querys/clientes.php/'+id)
+        .success(function(data){
+            if(data == "true"){
+                for(var i=0;i<$scope.caja.clientes.length;i++)
+                    if($scope.caja.clientes[i].ID == id){
+                        $scope.caja.clientes.splice(i,1);  
+                        break;
+                    }
+            }
+            else
+                alert('Ocurrio un error al eliminar el cliente.');
+
+        })
+        .error(function(){
+            alert('Ocurrio un error.');
+        })
     }
 });

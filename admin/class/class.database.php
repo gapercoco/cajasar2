@@ -107,7 +107,9 @@
 		public function showQuery(){
 			return $this->sql;
 		}
-		
+		public function lastId(){
+            return mysql_insert_id();
+        }
 		function __destruct(){
 			@mysql_free_result($this->resource);
 			@mysql_close($this->conexion);

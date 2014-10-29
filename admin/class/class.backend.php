@@ -109,6 +109,26 @@ class Backend {
         $db->setQuery($sql);
         return $db->loadObjectList();
     }
+    
+    public function createCliente($data){
+        $db = DataBase::getInstance();
+        if(isset($data->ID))
+            $sql = 'UPDATE lgi_clientes lgi_clientes SET cliente = '.$data->cliente.', nombre = "'.$data->nombre.'", domicilio = "'.$data->domicilio.'",telefono = "'.$data->telefono.'", email = "'.$data->email.'" WHERE ID = '.$data->ID;
+        else
+            $sql = 'INSERT INTO lgi_clientes SET cliente = '.$data->cliente.', nombre = "'.$data->nombre.'", domicilio = "'.$data->domicilio.'",telefono = "'.$data->telefono.'", email = "'.$data->email.'"';
+        $db->setQuery($sql);
+        if($db->execute())
+            return $db->lastId();
+        else
+            return false;
+    }
+    public function deleteCliente($id){
+        $db = DataBase::getInstance();
+        $sql = 'DELETE FROM lgi_clientes WHERE lgi_clientes.ID = '.$id;
+        $db->setQuery($sql);
+        return $db->execute();
+    }
+    
     public function getBancos(){
         $db = DataBase::getInstance();
         $sql = 'SELECT * FROM lgi_bancos';

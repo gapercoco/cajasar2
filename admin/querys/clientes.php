@@ -4,11 +4,8 @@ $back = new Backend();
 if($back->isLogged()){
     switch($_SERVER['REQUEST_METHOD']){
         case 'POST':
-            $id = file_get_contents("php://input");
-            echo json_encode($back->createCliente($id));
-            break;
-        case 'PUT':
-            // UPDATE CLIENTE
+            $data = json_decode(file_get_contents("php://input"));
+            echo json_encode($back->createCliente($data));
             break;
         
         case 'DELETE':
