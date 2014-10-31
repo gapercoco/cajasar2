@@ -31,6 +31,11 @@ cajasarApp.config(['$routeProvider',
                            controller: 'propiedadesController',
 
                        }).
+                       when ('/Seguridad',{
+                           templateUrl: 'views/seguridad.html',
+                           controller: 'seguridadController',
+
+                       }).
                        otherwise({
                            redirectTo: '/'
                        });
@@ -264,6 +269,25 @@ cajasarAppControllers.controller('cajaController',function($scope,$http){
             }
         });
     }
-    
+    $scope.getNombreBanco = function(id){
+        for(var i=0;i<$scope.caja.bancos.length;i++)
+            if($scope.caja.bancos[i].ID === id)
+                return $scope.caja.bancos[i].descripcion;
+    }
+    $scope.getNombreCliente = function(id){
+        for(var i=0;i<$scope.caja.clientes.length;i++)
+            if($scope.caja.clientes[i].ID === id)
+                return $scope.caja.clientes[i].nombre;
+    }
     $scope.getData();
+});
+cajasarAppControllers.controller('seguridadController',function($scope,$http,$interval){
+    $scope.logs = [];
+    
+    $scope.getLogs = function(){
+        $http.get('querys/logs.php').success(function(data){
+            $scope.logs = data;
+        });
+    }
+    $scope.getLogs();
 });

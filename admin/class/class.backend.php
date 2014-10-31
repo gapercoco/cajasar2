@@ -44,12 +44,14 @@ class Backend {
         if($u){
             session_start();
             $_SESSION['user'] = $u;
-
+            $this->log('LOGIN: Ingreso al sistema');
             return $this->logged = true;
         }
-        else
+        else{
+            $this->log('LOGIN: Intento fallido de ingresar. Usuario:'.$user);   
+        
             return $this->logged = false;
-
+        }
     }
     public function getMessages(){
         $db = DataBase::getInstance();
@@ -68,13 +70,21 @@ class Backend {
         $db = DataBase::getInstance();
         $sql = 'DELETE lgi_propiedades,lgi_fotosxprop FROM lgi_propiedades LEFT JOIN lgi_fotosxprop ON lgi_fotosxprop.ID = lgi_propiedades.ID WHERE lgi_propiedades.ID = '.$id;
         $db->setQuery($sql);
-        return $db->execute();
+        if($db->execute()){
+            $this->log('PROPIEDADES: Eliminada la propiedad'.$id);
+            return true;
+        }
+        else{
+            $this->log('PROPIEDADES: Error al eliminar propiedad '.mysql_error());
+            return false;
+        }
     }
     public function setMessagesAsRead($id){
         $db = DataBase::getInstance();
         $sql = 'UPDATE lgi_messages SET lgi_messages.date_call = NOW() WHERE lgi_messages.ID = '.$id;
         $db->setQuery($sql);
         if($db->execute()){
+            $this->log('MENSAJES: Marcado como leido mensaje: '.$id);
             $sql = 'SELECT date_call FROM lgi_messages WHERE lgi_messages.ID = '.$id;
             $db->setQuery($sql);
             return $db->loadObjectList();
@@ -88,7 +98,14 @@ class Backend {
         $db = DataBase::getInstance();
         $sql = 'DELETE FROM lgi_messages WHERE lgi_messages.ID = '.$id;
         $db->setQuery($sql);
-        return $db->execute();
+        if($db->execute()){
+            $this->log('MENSAJES: Elimina mensaje '.$id);
+            return true;
+        }
+        else{
+            $this->log('MENSAJES: Error al eliminar mensaje: '.mysql_error());
+            return false;
+        }
     }
     
     public function getMovimientos(){
@@ -116,10 +133,14 @@ class Backend {
         
         $sql = 'INSERT INTO lgi_movimientos SET fecha = "'.$d->movimiento->fecha.'",tipo="'.$d->movimiento->tipo.'",comprobante="'.$d->movimiento->comprobante.'",neto='.$d->movimiento->neto.',tipo_iva='.$d->movimiento->iva.',total='.$d->movimiento->total.',cliente='.$d->movimiento->cliente.',valor="'.$d->movimiento->valor.'",nrochc='.$nrochc.',usuario="'.$_SESSION['user']->user_login.'",descripcion="'.$d->movimiento->descripcion.'"';
         $db->setQuery($sql);
-        if($db->execute())
+        if($db->execute()){
+            $this->log('CAJA: Agrega movimiento '.$db->lastId());
             return true;
-        else
+        }
+        else{
+            $this->log('CAJA: Error al agregar  movimiento: '.mysql_error());
             return mysql_error();
+        }
     }
     
     public function getCheques(){
@@ -142,8 +163,10 @@ class Backend {
         else
             $sql = 'INSERT INTO lgi_clientes SET cliente = '.$data->cliente.', nombre = "'.$data->nombre.'", domicilio = "'.$data->domicilio.'",telefono = "'.$data->telefono.'", email = "'.$data->email.'"';
         $db->setQuery($sql);
-        if($db->execute())
+        if($db->execute()){
+            $this->log('CLIENTES: crea/actualiza cliente: '.$db->lastId());
             return $db->lastId();
+        }
         else
             return false;
     }
@@ -151,7 +174,12 @@ class Backend {
         $db = DataBase::getInstance();
         $sql = 'DELETE FROM lgi_clientes WHERE lgi_clientes.ID = '.$id;
         $db->setQuery($sql);
-        return $db->execute();
+        if($db->execute()){
+            $this->log('CLIENTES: elimina cliente: '.$id);
+            return true;
+        }
+        else
+            return false;
     }
     
     public function getBancos(){
@@ -166,6 +194,18 @@ class Backend {
         $db->setQuery($sql);
         return $db->loadObjectList();
     }
-    
+    public function log($actividad){
+        $db = DataBase::getInstance();
+        session_start();
+        $sql = 'INSERT INTO lgi_logs SET fecha = NOW(), usuario = "'.$_SESSION['user']->user_login.'",actividad = "'.$actividad.'"';
+        $db->setQuery($sql);
+        return $db->execute();
+    }
+    public function getLogs(){
+        $db = DataBase::getInstance();
+        $sql = 'SELECT * FROM lgi_logs';
+        $db->setQuery($sql);
+        return $db->loadObjectList();
+    }
 }
 ?>
