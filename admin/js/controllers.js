@@ -3,45 +3,45 @@ var cajasarApp = angular.module('cajasarApp',[
     'cajasarAppControllers'
 ]);
 cajasarApp.config(['$routeProvider',
-               function($routeProvider){
-                   $routeProvider.
-                   
-                   when ('/',{
-                       templateUrl: 'views/home.html',
-                       controller: 'homeController',
+                   function($routeProvider){
+                       $routeProvider.
 
-                   }).
-                   when ('/logout',{
-                       templateUrl: 'views/logout.php',
-                       controller: 'logoutController',
-                       
-                   }).
-                   when ('/Caja',{
-                       templateUrl: 'views/caja.html',
-                       controller: 'cajaController',
+                       when ('/',{
+                           templateUrl: 'views/home.html',
+                           controller: 'homeController',
 
-                   }).
-                   when ('/Mensajes',{
-                       templateUrl: 'views/mensajes.html',
-                       controller: 'mensajesController',
+                       }).
+                       when ('/logout',{
+                           templateUrl: 'views/logout.php',
+                           controller: 'logoutController',
 
-                   }).
-                   when ('/Propiedades',{
-                       templateUrl: 'views/propiedades.html',
-                       controller: 'propiedadesController',
+                       }).
+                       when ('/Caja',{
+                           templateUrl: 'views/caja.html',
+                           controller: 'cajaController',
 
-                   }).
-                   otherwise({
-                       redirectTo: '/'
-                   });
-               }
-              ]);
+                       }).
+                       when ('/Mensajes',{
+                           templateUrl: 'views/mensajes.html',
+                           controller: 'mensajesController',
+
+                       }).
+                       when ('/Propiedades',{
+                           templateUrl: 'views/propiedades.html',
+                           controller: 'propiedadesController',
+
+                       }).
+                       otherwise({
+                           redirectTo: '/'
+                       });
+                   }
+                  ]);
 
 
 var cajasarAppControllers = angular.module('cajasarAppControllers',[]);
 
 cajasarAppControllers.controller('loginController',function($scope,$http,$window){
-    
+
     $scope.credentials = {
         username: '',
         password: ''
@@ -67,7 +67,7 @@ cajasarAppControllers.controller('mensajesController',function($scope,$http){
             for(var i=0;i<$scope.mensajes.length;i++)
                 if($scope.mensajes[i].ID == id)
                     $scope.mensajes[i].date_call = data[0].date_call;
-            
+
         })
         .error(function(){
             alert('Ocurrio un error, vuelva a intentarlo');
@@ -85,7 +85,7 @@ cajasarAppControllers.controller('mensajesController',function($scope,$http){
             }
             else
                 alert('Ocurrio un error al eliminar el mensaje.');
-                
+
         })
         .error(function(){
             alert('Ocurrio un error.');
@@ -120,11 +120,11 @@ cajasarAppControllers.controller('propiedadesController',function($scope,$http){
         prop_dormitorios:'',
         prop_banios:'',
         prop_ubicacion:''
-        
+
     }
     */
     $scope.editarPropiedad = function(id){
-        
+
         //$('#modalNuevaPropiedad').modal('show');
         for(var i = 0; i < $scope.propiedades.length; i++)
             if($scope.propiedades[i].ID == id){
@@ -158,34 +158,37 @@ cajasarAppControllers.controller('cajaController',function($scope,$http){
     $scope.saldoEFE = 0;
     $scope.saldoCHC = 0;
     $scope.cliente = {};
-    
-    $http.get('querys/caja.php').success(function(data){
-        $scope.caja = data; 
-        for(var i=0;i<$scope.caja.movimientos.length;i++){
-            if($scope.caja.movimientos[i].tipo === 'INGRESO'){
-                $scope.saldoTotal += parseFloat($scope.caja.movimientos[i].total);
-                if($scope.caja.movimientos[i].valor === 'EFE')
-                    $scope.saldoEFE += parseFloat($scope.caja.movimientos[i].total);
-                else
-                    $scope.saldoCHC += parseFloat($scope.caja.movimientos[i].total);
+    $scope.movimiento = {};
+    $scope.cheque = {};
+
+    $scope.getData = function(){
+        $http.get('querys/caja.php').success(function(data){
+            $scope.caja = data; 
+            for(var i=0;i<$scope.caja.movimientos.length;i++){
+                if($scope.caja.movimientos[i].tipo === 'INGRESO'){
+                    $scope.saldoTotal += parseFloat($scope.caja.movimientos[i].total);
+                    if($scope.caja.movimientos[i].valor === 'EFE')
+                        $scope.saldoEFE += parseFloat($scope.caja.movimientos[i].total);
+                    else
+                        $scope.saldoCHC += parseFloat($scope.caja.movimientos[i].total);
+                }
+                else{
+                    $scope.saldoTotal -= parseFloat($scope.caja.movimientos[i].total);
+                    if($scope.caja.movimientos[i].valor === 'EFE')
+                        $scope.saldoEFE -= parseFloat($scope.caja.movimientos[i].total);
+                    else
+                        $scope.saldoCHC -= parseFloat($scope.caja.movimientos[i].total);
+                }
             }
-            else{
-                $scope.saldoTotal -= parseFloat($scope.caja.movimientos[i].total);
-                if($scope.caja.movimientos[i].valor === 'EFE')
-                    $scope.saldoEFE -= parseFloat($scope.caja.movimientos[i].total);
-                else
-                    $scope.saldoCHC -= parseFloat($scope.caja.movimientos[i].total);
-            }
-        }
-    });
-    
-    
+        });
+    }
+
     $scope.guardarCliente = function(){
         $('#btnGuardarCliente').removeClass('btn-success').disabled = true;
-        
+
         if(angular.isString($scope.cliente.nombre) && angular.isString($scope.cliente.cliente)){
             $http.post('querys/clientes.php',$scope.cliente).success(function(data){
-                
+
                 if(data != 'false'){
                     if(data === '0'){
                         for(var i=0;i<$scope.caja.clientes.length;i++){
@@ -200,7 +203,7 @@ cajasarAppControllers.controller('cajaController',function($scope,$http){
                     $('#btnGuardarCliente').addClass('btn-success').disabled = false;
                 }
                 else{
-                    
+
                     $('#btnGuardarCliente').addClass('btn-danger'),disabled = false;
                     console.log("Error al postear cliente: "+data);
                 }
@@ -237,4 +240,30 @@ cajasarAppControllers.controller('cajaController',function($scope,$http){
             alert('Ocurrio un error.');
         })
     }
+    $scope.filtraClientes = function(){
+        if($scope.movimiento.tipo === 'INGRESO')
+            return 1;
+        else
+            return 0;
+    }
+    $scope.guardarMovimiento = function(){
+        console.log(angular.toJson($scope.movimiento));
+        console.log(angular.toJson($scope.cheque));
+        var m = {
+            movimiento: $scope.movimiento,
+            valor: $scope.cheque
+        }
+        $http.post('querys/caja.php',m).success(function(data){
+            if(data === 'true'){
+                $scope.getData();
+                $('#modalMovimiento').modal('hide');
+            }
+            else{
+                console.log(data);
+                alert('Ocurrio un error!');
+            }
+        });
+    }
+    
+    $scope.getData();
 });

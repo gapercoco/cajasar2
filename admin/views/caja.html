@@ -2,7 +2,7 @@
 <div ng-controller="cajaController">
 
     <div class="row">
-        <button class="btn btn-success">Nuevo ingreso/egreso</button>
+        <button class="btn btn-success" data-toggle="modal" data-target="#modalMovimiento">Nuevo ingreso/egreso</button>
         <button class="btn btn-primary" data-toggle="modal" data-target="#modalClientes">Nuevo cliente / proveedor</button>
         <button class="btn btn-primary">Nuevo banco</button>
     </div>
@@ -15,7 +15,7 @@
             <div class="panel-body">
                 <table class="table table-striped table-hover" ng-if="caja.movimientos.length > 0">
                     <thead>
-                        <th>Fecha</th>
+                        <th><a href="" ng-click="orden='fecha';sentido = !sentido">Fecha</a></th>
                         <th>Comprobante</th>
                         <th>Tipo valor</th>
                         <th>Neto</th>
@@ -25,7 +25,7 @@
                         <th></th>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="movimiento in caja.movimientos|orderBy:fecha">
+                        <tr ng-repeat="movimiento in caja.movimientos|orderBy:orden:sentido"  title="{{movimiento.ID}} - {{movimiento.descripcion}}">
                             <td>{{movimiento.fecha|date}}</td>
                             <td>{{movimiento.comprobante}}</td>
                             <td>{{movimiento.valor}}</td>
@@ -34,7 +34,6 @@
                             <td><span ng-if="movimiento.tipo === 'EGRESO'">{{movimiento.total|currency}}</span></td>
                             <td><span ng-if="movimiento.tipo === 'INGRESO'">{{movimiento.total|currency}}</span></td>
                             <td>
-                                <a href=""><img src="img/icon/16/text.png" title="Ver detalle" /></a>
                                 <a href="#"><img src="img/icon/16/trash.png" title="Eliminar movimiento" /></a>
                             </td>
                         </tr>
@@ -56,12 +55,12 @@
                             <th>Banco</th>
                             <th>Nro Cheque</th>
                             <th>Fecha emisi&oacute;n</th>
-                            <th>Fecha pago</th>
-                            <th>Importe</th>
+                            <th><a href="" ng-click="orden='fecha_pago';sentido = !sentido">Fecha pago</a></th>
+                            <th><a href="" ng-click="orden='importe';sentido = !sentido">Importe</a></th>
                             <th></th>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="cheque in caja.cheques|filter:{tipo:'Tercero'}|orderBy:fecha_emision">
+                            <tr ng-repeat="cheque in caja.cheques|filter:{tipo:'Tercero'}|orderBy:orden:sentido">
                                 <td>{{cheque.banco}}</td>
                                 <td>{{cheque.numero|number}}</td>
                                 <td>{{cheque.fecha_emision|date}}</td>
@@ -91,7 +90,7 @@
                             <th></th>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="cheque in caja.cheques|filter:{tipo:'Propio'}|orderBy:fecha_emision">
+                            <tr ng-repeat="cheque in caja.cheques|filter:{tipo:'Propio'}|orderBy:fecha_pago">
                                 <td>{{cheque.banco}}</td>
                                 <td>{{cheque.numero|number}}</td>
                                 <td>{{cheque.fecha_emision|date}}</td>
@@ -208,7 +207,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                
+
                             </div>
                             <div class="row">
                                 <div class="col-md-12 form-group">
@@ -232,7 +231,6 @@
                     </form>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-danger" ng-click="deletePropiedad(propiedad.ID)" ng-if="propiedad.ID">Eliminar</button>
                         <button type="button" class="btn btn-primary" id="btnGuardarCliente" ng-click="guardarCliente()">Guardar</button>
                     </div>
                 </div>
@@ -240,5 +238,129 @@
         </div>
     </div>
     <!-- Fin modal clientes -->
-    
+    <!-- Modal Ingreso -->
+    <div class="modal fade" id="modalMovimiento">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Ingreso / Egreso</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="row">
+                            <div class="row">
+                                <div class="col-md-5 form-group">
+                                    <label for="">Fecha:</label>
+                                    <input type="date" class="form-control" id="" placeholder="" ng-model="movimiento.fecha">   
+                                </div>
+                                <div class="">
+                                    <div class="col-md-5 form-group">
+                                        <label for="tipo">Tipo:</label>
+                                        <select class="form-control" ng-model="movimiento.tipo" ng-init="movimiento.tipo = 'INGRESO'" required>
+                                            <option value="INGRESO" >Ingreso</option>
+                                            <option value="EGRESO">Egreso</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label for="">
+                                        <span ng-if="movimiento.tipo === 'INGRESO'">Cliente</span>
+                                        <span ng-if="movimiento.tipo === 'EGRESO'">Proveedor</span>    
+                                    </label>
+                                    <select class="form-control" ng-model="movimiento.cliente" >
+                                        <option ng-repeat="c in caja.clientes|orderBy:nombre|filter:{cliente:filtraClientes()}" value="{{c.ID}}">{{c.ID}} - {{c.nombre}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for="">Nro Comprobante:</label>
+                                    <input type="text" class="form-control" id="" placeholder="" ng-model="movimiento.comprobante">   
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 form-group">
+                                    <label for="">Descripci&oacute;n:</label>
+                                    <textarea class="form-control" id="" placeholder="Descipcion" ng-model="movimiento.descripcion" required></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <label for="">Neto:</label>
+                                    <input type="text" class="form-control" id="" placeholder="" ng-model="movimiento.neto" ng-change="movimiento.total = movimiento.neto*(1+(movimiento.iva / 100))" required>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label for="">I.V.A.</label>
+                                    <select class="form-control" ng-model="movimiento.iva" ng-init="movimiento.iva = 21">
+                                        <option ng-repeat="i in caja.ivas|orderBy:codigo" value="{{i.codigo}}">{{i.descripcion}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label for="">Total</label>
+                                    <input type="text" class="form-control" id="" placeholder="" ng-model="movimiento.total" disabled>
+                                </div>
+                            </div>
+                            <h4 class="page-header">Valores</h4>
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <label for="tipo">Forma de pago:</label>
+                                    <select class="form-control" ng-model="movimiento.valor" ng-init="movimiento.valor = 'EFE'" required>
+                                        <option value="EFE" >Efectivo</option>
+                                        <option value="CHC">Cheque</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 form-group" ng-if="movimiento.valor == 'CHC'">
+                                    <label for="tipo">Tipo cheque:</label>
+                                    <select class="form-control" ng-model="cheque.tipo" ng-init="cheque.tipo = 'Tercero'" ng-disabled="movimiento.tipo == 'INGRESO'" required>
+                                        <option value="Propio" >Propio</option>
+                                        <option value="Tercero">Tercero</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 form-group" ng-if="movimiento.valor == 'CHC' && movimiento.tipo == 'EGRESO' && cheque.tipo == 'Tercero'">
+                                    <label for="tipo">En cartera:</label>
+                                    <select class="form-control" ng-model="cheque.cartera">
+                                       <option value="">Seleccione o ingrese nuevo</option>
+                                        <option ng-repeat="c in caja.cheques|filter:{tipo:'Tercero'}|orderBy:fecha_pago" value="{{c.ID}}">{{c.numero|number}} - {{c.importe|currency}} - {{c.fecha_pago|date}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="movimiento.valor == 'CHC' && (!cheque.cartera || cheque.tipo == 'Propio')">
+                            
+                            <div class="col-md-4 form-group">
+                                <label for="">Número</label>
+                                <input type="text" class="form-control" id="" placeholder="" ng-model="cheque.numero" >
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label for="">Banco</label>
+                                <select class="form-control" ng-model="cheque.banco" ng-init="cheque.banco = 1">
+                                    <option ng-repeat="b in caja.bancos|orderBy:descripcion" value="{{b.ID}}">{{b.descripcion}}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 form-group">
+                                <label for="">Importe</label>
+                                <input type="text" class="form-control" id="" placeholder="" ng-model="cheque.importe" ng-init="movimiento.total">
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label for="">Fecha emisi&oacute;n</label>
+                                <input type="date" class="form-control" id="" placeholder="" ng-model="cheque.fecha_emision" >
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label for="">Fecha pago</label>
+                                <input type="date" class="form-control" id="" placeholder="" ng-model="cheque.fecha_pago" >
+                            </div>
+                        </div>
+                    </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" id="btnGuardarMovimiento" ng-click="guardarMovimiento()">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>

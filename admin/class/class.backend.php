@@ -97,6 +97,31 @@ class Backend {
         $db->setQuery($sql);
         return $db->loadObjectList();
     }
+    public function addMovimiento($d){
+        $db = DataBase::getInstance();
+        if($d->movimiento->valor === 'CHC'){
+            if( $d->valor->cartera == ''){
+                $sql = 'INSERT INTO lgi_cheques SET numero = '.$d->valor->numero.', banco ='.$d->valor->banco.',fecha_emision ="'.$d->valor->fecha_emision.'",fecha_pago="'.$d->valor->fecha_pago.'",importe='.$d->valor->importe.',tipo="'.$d->valor->tipo.'"';
+                $db->setQuery($sql);
+                if($db->execute())
+                    $nrochc = $db->lastId();
+                else
+                    return false;
+            }
+            else
+                $nrochc = $d->valor->cartera;
+        }
+        else
+            $nrochc = null;
+        
+        $sql = 'INSERT INTO lgi_movimientos SET fecha = "'.$d->movimiento->fecha.'",tipo="'.$d->movimiento->tipo.'",comprobante="'.$d->movimiento->comprobante.'",neto='.$d->movimiento->neto.',tipo_iva='.$d->movimiento->iva.',total='.$d->movimiento->total.',cliente='.$d->movimiento->cliente.',valor="'.$d->movimiento->valor.'",nrochc='.$nrochc.',usuario="'.$_SESSION['user']->user_login.'",descripcion="'.$d->movimiento->descripcion.'"';
+        $db->setQuery($sql);
+        if($db->execute())
+            return true;
+        else
+            return mysql_error();
+    }
+    
     public function getCheques(){
         $db = DataBase::getInstance();
         $sql = 'SELECT * FROM lgi_cheques';
@@ -132,6 +157,12 @@ class Backend {
     public function getBancos(){
         $db = DataBase::getInstance();
         $sql = 'SELECT * FROM lgi_bancos';
+        $db->setQuery($sql);
+        return $db->loadObjectList();
+    }
+    public function getIVAS(){
+        $db = DataBase::getInstance();
+        $sql = 'SELECT * FROM lgi_tipo_ivas';
         $db->setQuery($sql);
         return $db->loadObjectList();
     }
