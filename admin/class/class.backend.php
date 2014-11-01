@@ -66,6 +66,25 @@ class Backend {
         $db->setQuery($sql);
         return $db->loadObjectList();
     }
+    public function getFotosPropiedad($id){
+        $db = DataBase::getInstance();
+        $sql = 'SELECT path_pic FROM lgi_fotosxprop WHERE lgi_fotosxprop.ID = '.$id;
+        $db->setQuery($sql);
+        return $db->loadObjectList();
+    }
+    public function guardarPropiedad($d){
+        $db = DataBase::getInstance();
+        if(isset($d->prop->ID))
+            $sql = 'UPDATE lgi_propiedades SET prop_title = "'.$d->prop->prop_title.'",prop_resume = "'.$d->prop->prop_resume.'", prop_descrip = "'.$d->prop->prop_descrip.'", prop_type = "'.$d->prop->prop_type.'", prop_format = "'.$d->prop->prop_format.'", prop_slider = "'.$d->prop->prop_slider.'", prop_status = "'.$d->prop->prop_status.'", prop_created = NOW(), prop_sup_cubierta = "'.$d->prop->prop_sup_cubierta.'", prop_sup_total = "'.$d->prop->prop_sup_total.'", prop_dormitorios = "'.$d->prop->prop_dormitorios.'", prop_banios = "'.$d->prop->prop_banios.'", prop_ubicacion = "'.$d->prop->prop_ubicacion.'" WHERE ID = '.$d->prop->ID;
+        else
+            $sql = 'INSERT INTO lgi_propiedades SET prop_title = "'.$d->prop->prop_title.'",prop_resume = "'.$d->prop->prop_resume.'", prop_descrip = "'.$d->prop->prop_descrip.'", prop_type = "'.$d->prop->prop_type.'", prop_format = "'.$d->prop->prop_format.'", prop_slider = "'.$d->prop->prop_slider.'", prop_status = "'.$d->prop->prop_status.'", prop_created = NOW(), prop_sup_cubierta = "'.$d->prop->prop_sup_cubierta.'", prop_sup_total = "'.$d->prop->prop_sup_total.'", prop_dormitorios = "'.$d->prop->prop_dormitorios.'", prop_banios = "'.$d->prop->prop_banios.'", prop_ubicacion = "'.$d->prop->prop_ubicacion.'"';
+                
+        $db->setQuery($sql);
+        if($db->execute())
+            return array('ID'=>$db->lastId()>0?$db->lastId():$d->prop->ID);
+        else
+            return false;
+    }
     public function deletePropiedad($id){
         $db = DataBase::getInstance();
         $sql = 'DELETE lgi_propiedades,lgi_fotosxprop FROM lgi_propiedades LEFT JOIN lgi_fotosxprop ON lgi_fotosxprop.ID = lgi_propiedades.ID WHERE lgi_propiedades.ID = '.$id;
@@ -129,7 +148,7 @@ class Backend {
                 $nrochc = $d->valor->cartera;
         }
         else
-            $nrochc = null;
+            $nrochc = 'NULL';
         
         $sql = 'INSERT INTO lgi_movimientos SET fecha = "'.$d->movimiento->fecha.'",tipo="'.$d->movimiento->tipo.'",comprobante="'.$d->movimiento->comprobante.'",neto='.$d->movimiento->neto.',tipo_iva='.$d->movimiento->iva.',total='.$d->movimiento->total.',cliente='.$d->movimiento->cliente.',valor="'.$d->movimiento->valor.'",nrochc='.$nrochc.',usuario="'.$_SESSION['user']->user_login.'",descripcion="'.$d->movimiento->descripcion.'"';
         $db->setQuery($sql);
@@ -139,7 +158,7 @@ class Backend {
         }
         else{
             $this->log('CAJA: Error al agregar  movimiento: '.mysql_error());
-            return mysql_error();
+            return mysql_error().' - '.$sql;
         }
     }
     

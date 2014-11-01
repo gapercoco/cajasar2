@@ -16,20 +16,18 @@ $back = new Backend();
         <link href="../css/bootstrap.css" rel="stylesheet">
         <link href="../css/bootstrap-responsive.css" rel="stylesheet">
         <link href="css/cajasar.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/summernote.css">
+
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-route.min.js"></script>
-        <script src="js/tinymce/tinymce.min.js"></script>
-        <script src="js/controllers.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-sanitize.min.js"></script>
+        <script type="text/javascript" src="js/summernote.min.js"></script>
+        <script type="text/javascript" src="js/summernote-es-ES.js"></script>
+        <script type="text/javascript" src="js/controllers.js"></script>
         
-        <link href="http://rawgithub.com/moxiecode/plupload/master/js/jquery.plupload.queue/css/jquery.plupload.queue.css" type="text/css" rel="stylesheet" media="screen">
-
-        <script src="http://rawgithub.com/moxiecode/plupload/master/js/plupload.full.min.js" type="text/javascript"></script>
-        <script src="http://rawgithub.com/moxiecode/plupload/master/js/jquery.plupload.queue/jquery.plupload.queue.min.js" type="text/javascript"></script>
-        <script src="js/plupload/js/i18n/es.js" type="text/javascript"></script>
-
 
     </head>
     <body>

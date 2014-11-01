@@ -1,5 +1,6 @@
 var cajasarApp = angular.module('cajasarApp',[
     'ngRoute',
+    'ngSanitize',
     'cajasarAppControllers'
 ]);
 cajasarApp.config(['$routeProvider',
@@ -107,6 +108,10 @@ cajasarAppControllers.controller('homeController',function($scope,$http){
 });
 
 cajasarAppControllers.controller('propiedadesController',function($scope,$http){
+    
+    $scope.propiedades = [];
+    $scope.fotos = [];
+    $scope.fotosPropiedad = [];
     $http.get('querys/propiedades.php').success(function(data){
         $scope.propiedades = data;
     })
@@ -128,12 +133,34 @@ cajasarAppControllers.controller('propiedadesController',function($scope,$http){
 
     }
     */
+    $scope.guardarPropiedad = function(){
+        console.log('Guardar');
+        $('#btnGuardarCliente').removeClass('btn-success').disabled = true;
+        $scope.propiedad.prop_descrip = $('#descripcionPropiedad').code();
+        var p = {
+            prop: $scope.propiedad,
+            fotos:$scope.fotosPropiedad
+        };
+        $http.post('querys/propiedades.php',p).success(function(data){
+           console.log(angular.toJson(data));
+            if(data != 'false'){
+                $('#btnGuardarCliente').addClass('btn-success').disabled = false;
+                $scope.propiedad.ID = data.ID;
+            }
+            else{
+                $('#btnGuardarCliente').addClass('btn-danger').disabled = false;
+                alert('Ocurrio un error. Vuelva a intentarlo');
+            }
+        });
+    }
+    
     $scope.editarPropiedad = function(id){
 
         //$('#modalNuevaPropiedad').modal('show');
         for(var i = 0; i < $scope.propiedades.length; i++)
             if($scope.propiedades[i].ID == id){
                 $scope.propiedad = $scope.propiedades[i];
+                $scope.getFotosPropiedad(id);
                 console.log(angular.toJson($scope.propiedad));
                 break;
             }
@@ -157,6 +184,18 @@ cajasarAppControllers.controller('propiedadesController',function($scope,$http){
             alert('Ocurrio un error.');
         })
     }
+    $scope.getFotos = function(){
+        $http.get('querys/fotos.php').success(function(data){
+            $scope.fotos = data;
+        });
+    }
+    $scope.getFotosPropiedad = function(id){
+        $http.get('querys/fotos.php/'+id).success(function(data){
+            $scope.fotosPropiedad = data;
+        });
+    }
+    
+    $scope.getFotos();
 });
 cajasarAppControllers.controller('cajaController',function($scope,$http){
     $scope.saldoTotal = 0;
