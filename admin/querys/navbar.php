@@ -13,8 +13,8 @@ if($back->isLogged()){
                 array('label' => 'Inicio', 'link' => '#'),
                 array('label' => 'Caja', 'link' => '#/Caja'),
                 array('label' => 'Mensajes', 'link' => '#/Mensajes'),
-                array('label' => 'Propiedades', 'link' => '#/Propiedades'),
                 array('label' => 'Paginas', 'link' => '#/Paginas'),
+                array('label' => 'Propiedades', 'link' => '#/Propiedades'),
                 array('label' => 'Seguridad', 'link' => '#/Seguridad'),
                 array('label' => 'Salir', 'link' => '#/logout')
             )
@@ -29,8 +29,8 @@ if($back->isLogged()){
             'items' => array(
                 array('label' => 'Inicio', 'link' => '#'),
                 array('label' => 'Mensajes', 'link' => '#/Mensajes'),
-                array('label' => 'Propiedades', 'link' => '#/Propiedades'),
                 array('label' => 'Paginas', 'link' => '#/Paginas'),
+                array('label' => 'Propiedades', 'link' => '#/Propiedades'),
                 array('label' => 'Salir', 'link' => '#/logout')
             )
         );

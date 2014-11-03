@@ -24,7 +24,7 @@ $prop = $site->getPropiedad($_GET['propid']);
                                 $active = ' active';
                                 foreach($slider as $slide){
                                     echo '  <div class="item propiedad'.$active.'">
-                                                <img src="'.$slide->path_pic.'" alt="">
+                                                <img src="img/propiedades/'.$slide->path_pic.'" alt="">
                                             </div>';
                                     $active = '';
                                 }

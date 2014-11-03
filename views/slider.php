@@ -16,7 +16,7 @@ $sliders = $site->getSlider();
             foreach($sliders as $slide){
                 echo '
                     <div class="item'.$active.'">
-                        <img src="'.$slide->prop_slider.'" alt="">
+                        <img src="img/propiedades/'.$slide->path_pic.'" alt="'.$slide->prop_title.'">
                         <div class="container">
                             <div class="carousel-caption">
                                 <h1>'.$slide->prop_title.'</h1>

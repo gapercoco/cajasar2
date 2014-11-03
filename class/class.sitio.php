@@ -95,7 +95,8 @@
         
         public function getSlider(){
             $db = DataBase::getInstance();
-            $db->setQuery('SELECT ID, prop_title, prop_resume, prop_slider FROM lgi_propiedades AS a WHERE a.prop_slider != "" AND a.prop_status = 1');
+            //$db->setQuery('SELECT ID, prop_title, prop_resume, prop_slider FROM lgi_propiedades AS a WHERE a.prop_slider != "" AND a.prop_status = 1');
+            $db->setQuery('SELECT lgi_propiedades.ID, prop_title, prop_resume, path_pic FROM lgi_propiedades INNER JOIN lgi_fotosxprop ON lgi_fotosxprop.ID = lgi_propiedades.ID WHERE lgi_propiedades.prop_status =1 GROUP BY lgi_propiedades.ID');
             $slider = $db->loadObjectList();
             return $slider;
         }
@@ -105,7 +106,7 @@
             $db = DataBase::getInstance();
             $db->setQuery($sql);
             $db->execute();
-            $a = array('msg'=>'Salio OK', 'Error'=>mysql_error());
+            $a = array('msg'=>'Salio OK', 'Error'=>mysql_real_escape_string(mysql_error()));
             return $a;
         }
 		function cambiarfecha_mysql($fecha)

@@ -1,7 +1,8 @@
 <h1 class="page-header">Propiedades</h1>
 
 <div ng-controller="propiedadesController">
-    <button class="btn btn-primary" data-toggle="modal" data-target="#modalNuevaPropiedad">Nueva</button>
+    <button class="btn btn-primary" data-toggle="modal" data-target="#modalNuevaPropiedad">Nueva propiedad</button>
+    <button class="btn btn-primary" data-toggle="modal" data-target="#modalNuevaPropiedad">Cargar imágenes</button>
     <div class="clearfix"></div>
     <div class="col-md-5 pull-right">
         <form class="form-inline pull-right">
@@ -109,7 +110,7 @@
                                     <input type="number" class="form-control" min="1" ng-model="propiedad.prop_sup_total" />
                                 </div>
                                 <div class="col-md-3 col-sm-3 form-group">
-                                    <label for="">Sup. Total:</label>
+                                    <label for="">Sup. Cubierta:</label>
                                     <input type="number" class="form-control" min="1" ng-model="propiedad.prop_sup_cubierta" />
                                 </div>
                                 <div class="col-md-3 col-sm-3 form-group">
@@ -136,7 +137,7 @@
                                 <h3 class="page-header">Fotos</h3>
                                 <div class="row-fluid">
                                     <div class="col-md-4" ng-repeat="f in fotosPropiedad">
-                                        <img ng-src="../img/propiedades/{{f.path_pic}}" class="img img-responsive"  />
+                                        <img ng-src="../img/propiedades/{{f.path_pic}}" class="img img-responsive" ng-click="fotosPropiedad.splice($index,1)" />
                                     </div>
                                 </div>
                                 <h3 class="page-header">Asignar fotos</h3>
@@ -149,7 +150,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
                         <button type="button" class="btn btn-danger" ng-click="deletePropiedad(propiedad.ID)" ng-if="propiedad.ID">Eliminar</button>
-                        <button type="button" class="btn btn-primary" ng-click="guardarPropiedad()">Guardar</button>
+                        <button type="button" class="btn btn-primary" ng-click="guardarPropiedad()"  id="btnGuardarPropiedad">Guardar</button>
                     </div>
                 </div>
             </div>

@@ -80,10 +80,35 @@ class Backend {
             $sql = 'INSERT INTO lgi_propiedades SET prop_title = "'.$d->prop->prop_title.'",prop_resume = "'.$d->prop->prop_resume.'", prop_descrip = "'.$d->prop->prop_descrip.'", prop_type = "'.$d->prop->prop_type.'", prop_format = "'.$d->prop->prop_format.'", prop_slider = "'.$d->prop->prop_slider.'", prop_status = "'.$d->prop->prop_status.'", prop_created = NOW(), prop_sup_cubierta = "'.$d->prop->prop_sup_cubierta.'", prop_sup_total = "'.$d->prop->prop_sup_total.'", prop_dormitorios = "'.$d->prop->prop_dormitorios.'", prop_banios = "'.$d->prop->prop_banios.'", prop_ubicacion = "'.$d->prop->prop_ubicacion.'"';
                 
         $db->setQuery($sql);
-        if($db->execute())
-            return array('ID'=>$db->lastId()>0?$db->lastId():$d->prop->ID);
+        if($db->execute()){
+            $id = $db->lastId()>0?$db->lastId():$d->prop->ID;
+            $this->log('PROPIEDADES: Actualizo propiedad:'.$id);   
+            $fotos = $this->guardaFotos($id,$d->fotos);
+            if($fotos == 'true')
+                $this->log('PROPIEDADES: Cargo fotos correctamente: '.$id);   
+            else
+                $this->log('PROPIEDADES: Error al actualizar las fotos: '.mysql_real_escape_string($fotos));   
+
+            return array('ID'=>$id);
+        }
+            
         else
             return false;
+    }
+    public function guardaFotos($id,$fotos){
+        $db = DataBase::getInstance();
+        $db->setQuery('DELETE FROM lgi_fotosxprop WHERE lgi_fotosxprop.ID = '.$id);
+        $db->execute();
+        $sql = 'INSERT INTO lgi_fotosxprop (ID, path_pic) VALUES ';
+        foreach($fotos as $f)
+            $sql .= '('.$id.',"'.$f->path_pic.'"),';
+        $sql = rtrim($sql,',');
+        $db->setQuery($sql);
+        if ($db->execute())
+            return true;
+        else
+            return mysql_error().' - '.$sql;
+            
     }
     public function deletePropiedad($id){
         $db = DataBase::getInstance();
@@ -161,7 +186,19 @@ class Backend {
             return mysql_error().' - '.$sql;
         }
     }
-    
+    public function deleteMovimiento($id){
+        $db = DataBase::getInstance();
+        $sql = 'DELETE FROM lgi_movimientos WHERE lgi_movimientos.ID = '.$id;
+        $db->setQuery($sql);
+        if($db->execute()){
+            $this->log('CAJA: Eliminado movimiento: '.$id);
+            return true;
+        }
+        else{
+            $this->log('CAJA: Error al eliminar movimiento '.mysql_real_escape_string(mysql_error()));
+            return false;
+        }
+    }
     public function getCheques(){
         $db = DataBase::getInstance();
         $sql = 'SELECT * FROM lgi_cheques';

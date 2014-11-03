@@ -16,8 +16,8 @@
                     <thead>
                         <th><a href="" ng-click="orden='fecha';sentido = !sentido">Fecha</a></th>
                         <th>Comprobante</th>
-                        <th class="text-center">Tipo valor</th>
-                        <th class="text-right">Neto</th>
+                        <th class="text-center"><a href="" ng-click="orden='valor';sentido = !sentido">Tipo valor</a></th>
+                        <th class="text-right"><a href="" ng-click="orden='neto';sentido = !sentido">Neto</a></th>
                         <th class="text-right">I.V.A.</th>
                         <th class="text-right">Debe</th>
                         <th class="text-right">Haber</th>
@@ -33,7 +33,7 @@
                             <td class="text-right"><span ng-if="movimiento.tipo === 'EGRESO'">{{movimiento.total|currency}}</span></td>
                             <td class="text-right"><span ng-if="movimiento.tipo === 'INGRESO'">{{movimiento.total|currency}}</span></td>
                             <td>
-                                <a href="#"><img src="img/icon/16/trash.png" title="Eliminar movimiento" /></a>
+                                <a href="" ng-click="eliminarMovimiento(movimiento.ID)"><img src="img/icon/16/trash.png" title="Eliminar movimiento" /></a>
                             </td>
                         </tr>
                     </tbody>

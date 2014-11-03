@@ -27,6 +27,11 @@ cajasarApp.config(['$routeProvider',
                            controller: 'mensajesController',
 
                        }).
+                       when ('/Paginas',{
+                           templateUrl: 'views/paginas.html',
+                           controller: 'paginasController',
+
+                       }).
                        when ('/Propiedades',{
                            templateUrl: 'views/propiedades.html',
                            controller: 'propiedadesController',
@@ -106,7 +111,9 @@ cajasarAppControllers.controller('logoutController',function($scope,$window){
 cajasarAppControllers.controller('homeController',function($scope,$http){
     console.log('Home');
 });
-
+cajasarAppControllers.controller('paginasController',function($scope,$http){
+    console.log('Home');
+});
 cajasarAppControllers.controller('propiedadesController',function($scope,$http){
     
     $scope.propiedades = [];
@@ -135,7 +142,7 @@ cajasarAppControllers.controller('propiedadesController',function($scope,$http){
     */
     $scope.guardarPropiedad = function(){
         console.log('Guardar');
-        $('#btnGuardarCliente').removeClass('btn-success').disabled = true;
+        $('#btnGuardarPropiedad').removeClass('btn-success').disabled = true;
         $scope.propiedad.prop_descrip = $('#descripcionPropiedad').code();
         var p = {
             prop: $scope.propiedad,
@@ -144,11 +151,11 @@ cajasarAppControllers.controller('propiedadesController',function($scope,$http){
         $http.post('querys/propiedades.php',p).success(function(data){
            console.log(angular.toJson(data));
             if(data != 'false'){
-                $('#btnGuardarCliente').addClass('btn-success').disabled = false;
+                $('#btnGuardarPropiedad').addClass('btn-success').disabled = false;
                 $scope.propiedad.ID = data.ID;
             }
             else{
-                $('#btnGuardarCliente').addClass('btn-danger').disabled = false;
+                $('#btnGuardarPropiedad').addClass('btn-danger').disabled = false;
                 alert('Ocurrio un error. Vuelva a intentarlo');
             }
         });
@@ -160,6 +167,7 @@ cajasarAppControllers.controller('propiedadesController',function($scope,$http){
         for(var i = 0; i < $scope.propiedades.length; i++)
             if($scope.propiedades[i].ID == id){
                 $scope.propiedad = $scope.propiedades[i];
+                $('#descripcionPropiedad').code($scope.propiedades[i].prop_descrip);
                 $scope.getFotosPropiedad(id);
                 console.log(angular.toJson($scope.propiedad));
                 break;
@@ -194,6 +202,7 @@ cajasarAppControllers.controller('propiedadesController',function($scope,$http){
             $scope.fotosPropiedad = data;
         });
     }
+    
     
     $scope.getFotos();
 });
@@ -254,7 +263,7 @@ cajasarAppControllers.controller('cajaController',function($scope,$http){
             })
         }
         else
-            alert('Debe ingresar al menos la raz&oacute;n social e indicar si es cliente o proveedor');
+            alert('Debe ingresar al menos la razon social e indicar si es cliente o proveedor');
 
     }
     $scope.editarCliente = function(id){
@@ -291,8 +300,7 @@ cajasarAppControllers.controller('cajaController',function($scope,$http){
             return 0;
     }
     $scope.guardarMovimiento = function(){
-        console.log(angular.toJson($scope.movimiento));
-        console.log(angular.toJson($scope.cheque));
+        
         var m = {
             movimiento: $scope.movimiento,
             valor: $scope.cheque
@@ -307,6 +315,20 @@ cajasarAppControllers.controller('cajaController',function($scope,$http){
                 alert('Ocurrio un error!');
             }
         });
+    }
+    $scope.eliminarMovimiento = function(id){
+        if(confirm('Esta seguro que desea eliminar este movimiento?')){
+            $http.delete('querys/caja.php/'+id).success(function(data){
+                if(data === 'true'){
+                    $scope.getData();
+                    
+                }
+                else
+                    alert("Ocurrio un error al eliminar. Vuelva a intetarlo");
+            })
+        }
+        else
+            console.log("No elimino");
     }
     $scope.getNombreBanco = function(id){
         for(var i=0;i<$scope.caja.bancos.length;i++)

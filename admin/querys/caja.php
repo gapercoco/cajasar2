@@ -16,7 +16,7 @@ if($back->isLogged()){
         case 'DELETE':
             $a = explode('/',$_SERVER['REQUEST_URI']);
             $id = array_pop($a);
-            echo json_encode($back->deletePropiedad($id));
+            echo json_encode($back->deleteMovimiento($id));
             break;
         default:
             $a = array(

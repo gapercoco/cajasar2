@@ -1,4 +1,11 @@
 <?php
+define('DEBUG', false);
+if(DEBUG == true)
+{
+    ini_set('display_errors', 'On');
+    error_reporting(E_ALL);
+}
+
 include_once('config.php');
 include_once('class/class.database.php');
 include_once('class/class.sitio.php');
